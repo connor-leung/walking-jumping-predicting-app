@@ -1,27 +1,44 @@
+# Imports
 import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
 
-dfFirst = pd.read_csv(r"ConnorData.csv")
-dfSecond = pd.read_csv(r"ElizabethData.csv")
+# Data plot
+# Create the X axis (Time) for the length that Connor jumped
+dfConnor = pd.read_csv(r"ConnorData.csv")
+xFirstAxis = dfConnor["Time (s)"]
 
-xFirstAxis = dfFirst["Time (s)"]
-xSecondAxis = dfSecond["Time (s)"]
+# Create the X axis (Time) for the length of time Elizabeth jumped
+dfElizabeth = pd.read_csv(r"ElizabethData.csv")
+xSecondAxis = dfElizabeth["Time (s)"]
 
-plt.plot(xSecondAxis, dfSecond["Acceleration z (m/s^2)"], label = "Elizabeth's Data")
-plt.plot(xFirstAxis, dfFirst['Linear Acceleration z (m/s^2)'], label = "Connor's Data", color = "pink")
+# Plot each team member's data with respect to the length of time they collected data for
+plt.plot(xSecondAxis, dfElizabeth["Linear Acceleration z (m/s^2)"], label = "Elizabeth's Data (Hand)")
+plt.plot(xFirstAxis, dfConnor['Linear Acceleration z (m/s^2)'], label = "Connor's Data (Pocket)", color = "pink")
+
+# Axis labels
 plt.xlabel("Time (s)")
 plt.ylabel("Linear Acceleration z (m/s^2)")
+
+# Legend placement
 plt.legend(loc = "upper right")
+# Title and grid
 plt.title("Linear Acceleration Z Data vs Time")
 plt.grid(True)
 plt.show()
 
-
-sizes = [len(dfFirst), len(dfSecond)]
+# Meta-Data plot
+# Calculate the amount of data in each member's data frames and the total size of the data frame
+sizes = [len(dfConnor), len(dfElizabeth)]
 total = sum(sizes)
-labels = ['First Trial', 'Second Trial']
-plt.pie(sizes, labels = labels, autopct='%1.1f%%')
+
+# Labels and title
+labels = ["Connor's Data", "Elizabeth's Data"]
 plt.title("The Trial's Contribution to Total Collected Data")
+
+# Plot the amount of data each team member contributed
+plt.pie(sizes, labels = labels, autopct='%1.1f%%')
+
+# Display the total amount of data collected
 plt.text(2, -1.15, f'Whole represents: {total} segments', ha='right', va = 'bottom' )
+
 plt.show()
