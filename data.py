@@ -44,5 +44,3 @@ def createHDF5():
 
     structure
 
-def visualize(hdf5_file):
-    how 
