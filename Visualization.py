@@ -12,8 +12,8 @@ dfElizabeth = pd.read_csv(r"ElizabethData.csv")
 xSecondAxis = dfElizabeth["Time (s)"]
 
 # Plot each team member's data with respect to the length of time they collected data for
-plt.plot(xSecondAxis, dfElizabeth["Linear Acceleration z (m/s^2)"], label = "Elizabeth's Data (Hand)")
 plt.plot(xFirstAxis, dfConnor['Linear Acceleration z (m/s^2)'], label = "Connor's Data (Pocket)", color = "pink")
+plt.plot(xSecondAxis, dfElizabeth["Linear Acceleration z (m/s^2)"], label = "Elizabeth's Data (Hand)")
 
 # Axis labels
 plt.xlabel("Time (s)")
