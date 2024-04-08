@@ -26,6 +26,7 @@ import FeatureExtractionandNormailzation as FE
 # Placeholder for loading your model
 
 global path
+
 def load_pretrained_model():
     # Load and return your pre-trained model here
     # For demonstration, this will be a placeholder
@@ -36,11 +37,9 @@ def load_pretrained_model():
     trainData = pd.DataFrame(trainData)
 
 
-    # jumping = 1, walking = 0
-    # jumping if position > 1.5 or position < -1.5
-    trainData[0] = trainData[0].apply(lambda x: 1 if x < -1.5 or x > 1.5 else 0 )
+    # jumping = 1, walking = 0 
+    labels = trainData[0].apply(lambda x: 1 if x > 6 else 0 )
 
-    labels = trainData[0]
 
     X_train, X_test, Y_train, Y_test = train_test_split(
         trainData, labels, test_size=0.1, random_state=42, shuffle=True)
@@ -68,7 +67,7 @@ def process_and_predict(input_path):
     # For simplicity, assuming a single feature 'y_acceleration' directly predicts activity
     # Replace with actual data processing and model prediction
     predictions = model.predict(df)
-    return df.index, predictions
+    return df.index, predictions, df
 
 
 
@@ -112,8 +111,7 @@ def open_csv(graph_frame):
     filepath = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
 
     if filepath:
-
-        time_frames, predictions = process_and_predict(filepath)
+        time_frames, predictions, dataFrame = process_and_predict(filepath)
         plot_classifications(time_frames, predictions, graph_frame)
 
 def createFeatureLabels(dataset):
@@ -158,16 +156,21 @@ def createFeatureLabels(dataset):
     kurtosis_label.config(text='Kurtosis: {:.2f}'.format(features['kurtosis'].iloc[0]))
     skewness_label.config(text='Skewness: {:.2f}'.format(features['skewness'].iloc[0]))
 
-def upload_file():
+def download_file():
     filepath = filedialog.asksaveasfilename(defaultextension='.csv', filetypes=[("CSV files", "*.csv")])
 
     if not filepath:
         return
 
-    index, predictions = process_and_predict(path)
-    predictions = pd.DataFrame(predictions)
+    index, predictions, zAccel = process_and_predict(path)
+    # Combine index and predictions into a DataFrame
+    df = pd.DataFrame({
+        'z-acceleration': zAccel.iloc[:, 0],
+        'Prediction': predictions
+    })
 
-    predictions.to_csv(filepath, index = False)
+    # Save the DataFrame to CSV
+    df.to_csv(filepath, index=False)
 
 def create_gui():
     root = tk.Tk()
@@ -192,7 +195,7 @@ def create_gui():
     close_button = tk.Button(button_frame, text = 'Close', command = lambda: root.destroy(), width = 15, height=2, background= '#FFFFFF')
     close_button.grid(row = 2, column =0, padx = 5, pady =2, sticky = 'EW')
 
-    upload_button = tk.Button(button_frame, text='Upload', command = lambda: upload_file(), width = 15, height=2, background= '#FFFFFF')
+    upload_button = tk.Button(button_frame, text='Download', command = lambda: download_file(), width = 15, height=2, background= '#FFFFFF')
     upload_button.grid(row=3, column=0, padx=5, pady=2, sticky='EW')
 
     feature_label = tk.Label(feature_frame, text='Features: ', width=20, background= '#FFFFFF', font=(15))
