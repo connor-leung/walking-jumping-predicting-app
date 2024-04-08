@@ -20,16 +20,10 @@ import pandas as pd
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import FeatureExtractionandNormailzation as FE
-# Assuming the necessary libraries for model loading and prediction are imported
-# For demonstration, actual model loading and prediction logic are simplified
-
-# Placeholder for loading your model
 
 global path
 
 def load_pretrained_model():
-    # Load and return your pre-trained model here
-    # For demonstration, this will be a placeholder
 
     with h5py.File('finalDataset.h5', 'r') as f:
         trainData = f['dataset/Train/trainData'][:]
@@ -58,14 +52,13 @@ model = load_pretrained_model()
 def process_and_predict(input_path):
     global path
     path = input_path
-    # Simulated processing and prediction function
+    
     df = pd.read_csv(input_path)
     df = df.iloc[:, 3]
     df = df.iloc[1:]
     df = df.to_frame()
     createFeatureLabels(df)
-    # For simplicity, assuming a single feature 'y_acceleration' directly predicts activity
-    # Replace with actual data processing and model prediction
+
     predictions = model.predict(df)
     return df.index, predictions, df
 
